@@ -1,0 +1,10 @@
+<h2>Access Granted</h2>
+
+<p>Welcome, {{ user.username }}</p>
+<p>Role: {{ user.role }}</p>
+
+<a href="/logout">Logout</a>
+
+{% if denied %}
+<a href="/dashboard">Go to Dashboard</a>        
+{% endif %}

@@ -1,0 +1,134 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 40px;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
+}
+
+.success {
+    color: green;
+    margin-bottom: 10px;
+}
+
+.logs {
+    margin-top: 20px;
+}
+
+.logs h2 {
+    margin-bottom: 10px;
+}
+
+.logs table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.logs th,
+.logs td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}       
+.logs th {
+    background-color: #f2f2f2;
+    text-align: left;
+}   
+
+.logs tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.logs tr:hover {
+    background-color: #ddd;
+}
+
+.logs td {
+    text-align: center;
+}
+
+.logs a {
+    color: #007BFF;
+    text-decoration: none;
+}   
+
+.logs a:hover {
+    text-decoration: underline;
+}
+
+.logs button {
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.logs button:hover {
+    background-color: #0056b3;
+}
+
+.logs button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.logs button:disabled:hover {
+    background-color: #ccc;
+}
+
+.logs button:disabled:active {
+    background-color: #ccc;
+}
+
+.logs button:active {
+    background-color: #0056b3;
+}
+
+.logs button:disabled:active {
+    background-color: #ccc;
+}
