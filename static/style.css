@@ -1,134 +1,159 @@
+/* Базові налаштування сторінки */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    padding: 40px;
-}
-
-.container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
     color: #333;
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
+h1,
+h2,
+h3 {
+    color: #2c3e50;
 }
 
-label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-input[type="text"],
-input[type="password"] {
+/* Навігація та кнопки */
+nav {
+    margin: 20px 0;
     padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
+    background: #fff;
     border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-button {
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-.error {
-    color: red;
-    margin-bottom: 10px;
-}
-
-.success {
-    color: green;
-    margin-bottom: 10px;
-}
-
-.logs {
-    margin-top: 20px;
-}
-
-.logs h2 {
-    margin-bottom: 10px;
-}
-
-.logs table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.logs th,
-.logs td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}       
-.logs th {
-    background-color: #f2f2f2;
-    text-align: left;
-}   
-
-.logs tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.logs tr:hover {
-    background-color: #ddd;
-}
-
-.logs td {
-    text-align: center;
-}
-
-.logs a {
+a {
     color: #007BFF;
     text-decoration: none;
-}   
+    font-weight: 500;
+}
 
-.logs a:hover {
+a:hover {
     text-decoration: underline;
 }
 
-.logs button {
-    padding: 5px 10px;
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
     background-color: #007BFF;
     color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    text-decoration: none;
+}
+
+/* Форма контекстної автентифікації */
+form {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #cbd5e0;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #2b6cb0;
+    color: white;
     border: none;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
 }
 
-.logs button:hover {
-    background-color: #0056b3;
+button:hover {
+    background-color: #2c5282;
 }
 
-.logs button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+/* Нові інформаційні блоки архітектури Zero Trust */
+
+/* Картка профілю користувача та балів безпеки */
+.profile-box {
+    background: #edf2f7;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border-left: 5px solid #4a5568;
 }
 
-.logs button:disabled:hover {
-    background-color: #ccc;
+.profile-box strong {
+    font-size: 1.1em;
 }
 
-.logs button:disabled:active {
-    background-color: #ccc;
+/* Попередження для Limited Access (Жовтий блок) */
+.warning-box {
+    background-color: #fffaf0;
+    border: 1px solid #feebc8;
+    border-left: 5px solid #dd6b20;
+    color: #c05621;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 20px 0;
 }
 
-.logs button:active {
-    background-color: #0056b3;
+/* Блок повної відмови у доступі (Червоний блок) */
+.error-box {
+    background-color: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-left: 5px solid #e53e3e;
+    color: #c53030;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 20px 0;
 }
 
-.logs button:disabled:active {
-    background-color: #ccc;
+/* Логи та таблиці моніторингу */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+}
+
+th,
+td {
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f7fafc;
+    color: #4a5568;
+}
+
+tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+tr:hover {
+    background-color: #edf2f7;
 }
