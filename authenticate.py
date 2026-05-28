@@ -1,51 +1,32 @@
-users = {
-    "anna": {"password": "student123", "role": "student"},
-    "teacher1": {"password": "teacher123", "role": "teacher"},
-    "admin1": {"password": "admin123", "role": "admin"},
-    "guest": {"password": "guest123", "role": "guest"},
-}
+import sqlite3
+from database import get_db_connection
 
 
 def authenticate_user(username, password):
-    user = users.get(username)
+    """
+    Шукає користувача у вашій базі даних users.db.
+    Захищає додаток від SQL-ін'єкцій за допомогою параметризації запитів.
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
-    if user and user["password"] == password:
-        return {"username": username, "role": user["role"]}
+        # Безпечний запит до SQLite
+        cursor.execute(
+            "SELECT username, role FROM users WHERE username = ? AND password = ?",
+            (username, password),
+        )
+        user_row = cursor.fetchone()
+        conn.close()
 
-    return None
+        # Якщо користувача з таким логіном і паролем знайдено
+        if user_row:
+            return {"username": user_row["username"], "role": user_row["role"]}
 
+    except sqlite3.OperationalError as e:
+        print(f"[ERROR] Помилка підключення до таблиці 'users': {e}")
+        print("[ERROR] Перевірте, чи збігаються назви колонок у вашій базі даних.")
+        return None
 
-def authenticate_admin(username, password):
-    user = users.get(username)
-
-    if user and user["password"] == password and user["role"] == "admin":
-        return {"username": username, "role": user["role"]}
-
-    return None
-
-
-def authenticate_teacher(username, password):
-    user = users.get(username)
-
-    if user and user["password"] == password and user["role"] == "teacher":
-        return {"username": username, "role": user["role"]}
-
-    return None
-
-
-def authenticate_student(username, password):
-    user = users.get(username)
-
-    if user and user["password"] == password and user["role"] == "student":
-        return {"username": username, "role": user["role"]}
-
-    return None
-
-
-def authenticate_guest(username, password):
-    user = users.get(username)
-
-    if user and user["password"] == password and user["role"] == "guest":
-        return {"username": username, "role": user["role"]}
-
+    # Якщо облікові дані невірні
     return None
