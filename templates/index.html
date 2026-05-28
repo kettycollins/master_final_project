@@ -1,59 +1,28 @@
-<h1>Zero Trust School Access Control</h1>
-<a href="/login">Login</a>
+<!DOCTYPE html>
+<html lang="uk">
 
-{% if user %}
-<h2>Welcome, {{ user["username"] }}!</h2>
-{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <title>Zero Trust School Access Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 
-{% if user %}
-<a href="/logout">Logout</a>
-{% endif %}
+<body>
+    <h1>Система контролю доступу Zero Trust для шкіл</h1>
 
-{% if user %}
-<a href="/dashboard">Dashboard</a>
-{% endif %}
+    {% if session.get('user') %}
+    <h2>Вітаємо, {{ session['user'] }}!</h2>
+    <p>Ваша роль у системі: <strong>{{ session['role'] }}</strong></p>
+    <p>Рівень доступу: <strong>{{ session['access_level'] }}</strong></p>
 
-{% if user %}
-<a href="/logs">Logs</a>
-{% endif %}
+    <nav>
+        <a href="/dashboard">Панель керування</a> |
+        <a href="/logout">Вийти з акаунта</a>
+    </nav>
+    {% else %}
+    <p>Для отримання доступу до ресурсів закладу необхідно пройти автентифікацію з урахуванням контексту безпеки.</p>
+    <a href="/login" class="btn">Перейти до входу</a>
+    {% endif %}
+</body>
 
-{% if user %}
-<a href="/policies">Policies</a>
-{% endif %}
-
-{% if user %}
-<a href="/users">User Management</a>
-{% endif %} 
-
-{% if user %}
-<a href="/devices">Device Management</a>
-{% endif %}
-
-{% if user %}
-<a href="/reports">Reports</a>
-{% endif %}
-
-{% if user %}
-<a href="/settings">Settings</a>
-{% endif %} 
-
-{% if user %}
-<a href="/help">Help</a>
-{% endif %} 
-
-{% if user %}
-<a href="/about">About</a>
-{% endif %}
-
-{% if user %}
-<a href="/contact">Contact</a>
-{% endif %}
-
-{% if user %}
-<a href="/feedback">Feedback</a>
-{% endif %}
-
-{% if user %}
-<a href="/logout">Logout</a>
-{% endif %}
-
+</html>

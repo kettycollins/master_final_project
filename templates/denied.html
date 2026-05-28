@@ -1,5 +1,27 @@
-<h2>Access Denied</h2>
-<p>{{ reason }}</p>
+<!DOCTYPE html>
+<html lang="uk">
 
-<a href="/login">Try again</a>
+<head>
+    <meta charset="UTF-8">
+    <title>Доступ відхилено</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 
+<body>
+    <h2 style="color: red;">🔴 Доступ заблоковано політикою безпеки</h2>
+
+    <div class="error-box">
+        <p><strong>Причина відмови:</strong> {{ reason }}</p>
+        {% if score is not none %}
+        <p><strong>Ваш рівень довіри (Trust Score):</strong> <span style="color: red; font-weight: bold;">{{ score
+                }}</span> (мінімально необхідно: 40)</p>
+        {% endif %}
+    </div>
+
+    <p>Система працює за принципом Zero Trust. Будь ласка, перевірте, чи використовуєте ви довірений шкільний пристрій
+        або безпечне мережеве підключення.</p>
+
+    <a href="/login">Спробувати знову</a>
+</body>
+
+</html>

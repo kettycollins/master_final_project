@@ -1,10 +1,44 @@
-<h2>Access Granted</h2>
+<!DOCTYPE html>
+<html lang="uk">
 
-<p>Welcome, {{ user.username }}</p>
-<p>Role: {{ user.role }}</p>
+<head>
+    <meta charset="UTF-8">
+    <title>Панель керування</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 
-<a href="/logout">Logout</a>
+<body>
+    {% if access_level == 'ALLOW' %}
+    <h2 style="color: green;">Доступ дозволено (Full Access)</h2>
+    {% elif access_level == 'LIMITED' %}
+    <h2 style="color: #d4af37;">Обмежений доступ (Limited Access)</h2>
+    <div class="warning-box">
+        <p><strong>Увага!</strong> Ваш поточний контекст (пристрій або мережа) не відповідає критеріям повної довіри.
+            Частина критичних функцій (редагування журналів, адміністрування) заблокована.</p>
+    </div>
+    {% endif %}
 
-{% if denied %}
-<a href="/dashboard">Go to Dashboard</a>        
-{% endif %}
+    <div class="profile-box">
+        <p>Вітаємо, <strong>{{ user.username }}</strong></p>
+        <p>Ваша роль у системі: <code>{{ user.role }}</code></p>
+        <p>Поточний рейтинг довіри (Trust Score): <strong>{{ score }} / 80</strong></p>
+    </div>
+
+    <hr>
+    <h3>Доступні ресурси:</h3>
+    <ul>
+        <li><a href="#">Електронний розклад занять</a> (Доступно всім)</li>
+        <li><a href="#">Шкільні навчальні матеріали</a> (Доступно всім)</li>
+
+        {% if access_level == 'ALLOW' %}
+        <li style="color: green;"><strong>[Критичний ресурс]</strong> <a href="#">Редагування журналу оцінок</a></li>
+        {% else %}
+        <li style="color: gray;">[Критичний ресурс] Редагування журналу оцінок (Заблоковано в обмеженому контексті)</li>
+        {% endif %}
+    </ul>
+
+    <br>
+    <a href="/logout">Вийти з системи</a>
+</body>
+
+</html>
