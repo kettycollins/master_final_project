@@ -87,3 +87,18 @@ if __name__ == "__main__":
     from database import create_policies_table
 
     create_policies_table()
+
+    # Create the users table if it doesn't exist
+    from database import create_users_table
+
+    create_users_table()
+
+    # Create the logs table if it doesn't exist
+    from database import create_logs_table
+
+    create_logs_table()
+
+    # Create the policies table if it doesn't exist
+    from database import create_policies_table
+
+    create_policies_table()
