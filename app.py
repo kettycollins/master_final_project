@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session
-from auth import authenticate_user
+from authenticate import authenticate_user
 from policies import evaluate_access
 from logging_utils import log_event
 
