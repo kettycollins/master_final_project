@@ -9,6 +9,7 @@ from policies import evaluate_access
 from logging_utils import log_event
 
 app = Flask(__name__)
+app.jinja_env.filters["uppercase"] = lambda s: s.upper() if s else ""
 app.config.from_object(Config)
 
 

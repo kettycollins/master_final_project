@@ -1,27 +1,106 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-theme="auto">
 
 <head>
     <meta charset="UTF-8">
-    <title>Доступ відхилено</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рішення доступу | Zero Trust Access Decision</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-    <h2 style="color: red;">🔴 Доступ заблоковано політикою безпеки</h2>
+    <div class="ad-wrap">
+        <div class="ad-top">
+            <span class="ad-logo">ztac · policy decision point</span>
+            <div class="zt-divider"></div>
+            <button id="theme-toggle" class="theme-btn" type="button">🌓</button>
+        </div>
 
-    <div class="error-box">
-        <p><strong>Причина відмови:</strong> {{ reason }}</p>
-        {% if score is not none %}
-        <p><strong>Ваш рівень довіри (Trust Score):</strong> <span style="color: red; font-weight: bold;">{{ score
-                }}</span> (мінімально необхідно: 40)</p>
-        {% endif %}
+        {% if score <= 10 or reason and "Admin restriction" in reason or "blocked" in reason %} <div
+            class="ad-hero deny">
+            <h1 class="ad-verdict deny">ACCESS DENIED</h1>
+            <div class="ad-score-bar">
+                <span>TRUST SCORE: <strong>{{ score }}/80</strong></span>
+                <span class="ad-status-badge badge-deny">CRITICAL RISK</span>
+            </div>
     </div>
+    {% elif score < 70 %} <div class="ad-hero limited">
+        <h1 class="ad-verdict limited">LIMITED ACCESS</h1>
+        <div class="ad-score-bar">
+            <span>TRUST SCORE: <strong>{{ score }}/80</strong></span>
+            <span class="ad-status-badge badge-limited">MEDIUM RISK</span>
+        </div>
+        </div>
+        {% else %}
+        <div class="ad-hero allow">
+            <h1 class="ad-verdict allow">ACCESS GRANTED</h1>
+            <div class="ad-score-bar">
+                <span>TRUST SCORE: <strong>{{ score }}/80</strong></span>
+                <span class="ad-status-badge badge-allow">TRUSTED</span>
+            </div>
+        </div>
+        {% endif %}
 
-    <p>Система працює за принципом Zero Trust. Будь ласка, перевірте, чи використовуєте ви довірений шкільний пристрій
-        або безпечне мережеве підключення.</p>
+        <div class="ad-meta-grid">
+            <div class="ad-meta-item">
+                <div class="ad-meta-label">Поточна роль</div>
+                <div class="ad-meta-val">{{ session.get('role', 'UNKNOWN') | uppercase }}</div>
+            </div>
+            <div class="ad-meta-item">
+                <div class="ad-meta-label">Стан пристрою</div>
+                <div class="ad-meta-val">Context Verified</div>
+            </div>
+            <div class="ad-meta-item">
+                <div class="ad-meta-label">Мережевий контекст</div>
+                <div class="ad-meta-val">Evaluated</div>
+            </div>
+        </div>
 
-    <a href="/login">Спробувати знову</a>
+        <div class="ad-violations-box">
+            <div class="ad-violations-title">Аналіз критеріїв рушія політик (Policy Engine Analysis)</div>
+            <div class="ad-violations-list">
+                <div class="ad-violation-entry">
+                    <span class="ad-bullet"></span>
+                    <span><strong>Вердикт системи:</strong> {{ reason if reason else 'Доступ обмежено автоматичною
+                        політикою контексту.' }}</span>
+                </div>
+                <div class="ad-violation-entry">
+                    <span class="ad-bullet"></span>
+                    <span><strong>Рекомендація користувачу:</strong> Для отримання повних прав використовуйте керований
+                        пристрій (Managed Device) у внутрішній шкільній мережі.</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 1.5rem;">
+            <a href="{{ url_for('login') }}" class="zt-btn"
+                style="text-decoration: none; text-align: center; flex: 1;">Повернутися до входу</a>
+            <a href="{{ url_for('index') }}" class="zt-btn"
+                style="text-decoration: none; text-align: center; background: transparent; border: 1px solid var(--border-secondary); color: var(--text-main); flex: 1;">На
+                головну</a>
+        </div>
+        </div>
+
+        <script>
+            const toggleBtn = document.getElementById('theme-toggle');
+            const htmlEl = document.documentElement;
+
+            const savedTheme = localStorage.getItem('theme') || 'auto';
+            htmlEl.setAttribute('data-theme', savedTheme);
+
+            toggleBtn.addEventListener('click', () => {
+                const currentTheme = htmlEl.getAttribute('data-theme');
+                let newTheme = 'light';
+                if (currentTheme === 'light') newTheme = 'dark';
+                else if (currentTheme === 'dark') newTheme = 'light';
+                else {
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    newTheme = prefersDark ? 'light' : 'dark';
+                }
+                htmlEl.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        </script>
 </body>
 
 </html>
