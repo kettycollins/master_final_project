@@ -1,86 +1,85 @@
-from flask import Flask, render_template, request, redirect, session
-from authenticate import authenticate_user
-from policies import evaluate_access
-from logging_utils import log_event, create_log_file
+import os
+from flask import Flask, render_template, request, redirect, url_for, session
+from config import Config
 from database import init_db
+from authenticate import authenticate_user
+from policies import evaluate_policy
+from logging_utils import log_event
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"
+app.config.from_object(Config)
 
 
 @app.route("/")
-def home():
+def index():
     return render_template("index.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        device = request.form["device"]
-        network = request.form["network"]
+        username = request.form.get("username")
+        password = request.form.get("password")
+        device = request.form.get("device")
+        network = request.form.get("network")
 
-        # Автентифікація користувача
+        # Автентифікація через SQLite
         user = authenticate_user(username, password)
-        if not user:
-            return render_template(
-                "denied.html", reason="Невірне ім'я користувача або пароль"
+
+        if user:
+            # Оцінка контексту Zero Trust рушієм
+            decision, score, reason = evaluate_policy(user["role"], device, network)
+
+            # ВИПРАВЛЕНО: Передаємо всі потрібні 7 параметрів (включаючи score та reason)
+            log_event(username, user["role"], device, network, decision, score, reason)
+
+            if decision in ["ALLOW", "LIMITED"]:
+                session["user"] = user["username"]
+                session["role"] = user["role"]
+                session["access_level"] = decision
+                session["trust_score"] = score
+                return redirect(url_for("dashboard"))
+            else:
+                # Якщо рушій повернув DENY
+                return render_template("denied.html", reason=reason, score=score)
+        else:
+            # Невірний логін або пароль
+            log_event(
+                username, "UNKNOWN", device, network, "DENY", 0, "Invalid credentials"
             )
-
-        # Оцінка контексту безпеки рушієм політик
-        decision, trust_score, reason = evaluate_access(
-            role=user["role"], device=device, network=network
-        )
-
-        # Запис розширеної інформації в логи (важливо для диплому!)
-        log_event(username, user["role"], device, network, decision)
-
-        # Перевірка вердикту системи
-        if decision == "DENY":
-            return render_template("denied.html", reason=reason, score=trust_score)
-
-        # Зберігаємо дані в сесію для захисту роутів
-        session["user"] = username
-        session["role"] = user["role"]
-        session["access_level"] = decision
-        session["trust_score"] = trust_score
-
-        return render_template(
-            "dashboard.html", user=user, access_level=decision, score=trust_score
-        )
+            return render_template(
+                "login.html", error="Невірне ім'я користувача або пароль."
+            )
 
     return render_template("login.html")
 
 
 @app.route("/dashboard")
 def dashboard():
-    # Захист роуту (Broken Access Control Fix)
+    # Захист від прямого переходу без авторизації
     if "user" not in session:
-        return redirect("/login")
+        return redirect(url_for("login"))
 
     user_data = {"username": session["user"], "role": session["role"]}
+
     return render_template(
         "dashboard.html",
         user=user_data,
-        access_level=session.get("access_level"),
-        score=session.get("trust_score"),
+        access_level=session["access_level"],
+        score=session["trust_score"],
     )
 
 
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect("/")
+    return redirect(url_for("index"))
 
 
-# ПРАВИЛЬНА ІНІЦІАЛІЗАЦІЯ: спочатку створюємо файли й бази, а потім запускаємо сервер
 if __name__ == "__main__":
     print("[INIT] Створення конфігураційних файлів логів...")
-    create_log_file()
-
     print("[INIT] Ініціалізація бази даних SQLite...")
     init_db()
 
     print("[SYSTEM] Запуск Zero Trust веб-сервера...")
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
