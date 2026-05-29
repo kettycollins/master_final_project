@@ -3,7 +3,9 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from config import Config
 from database import init_db
 from authenticate import authenticate_user
-from policies import evaluate_policy
+
+# ВИПРАВЛЕНО: Імпортуємо саме evaluate_access
+from policies import evaluate_access
 from logging_utils import log_event
 
 app = Flask(__name__)
@@ -27,10 +29,10 @@ def login():
         user = authenticate_user(username, password)
 
         if user:
-            # Оцінка контексту Zero Trust рушієм
-            decision, score, reason = evaluate_policy(user["role"], device, network)
+            # ВИПРАВЛЕНО: Викликаємо правильну функцію evaluate_access
+            decision, score, reason = evaluate_access(user["role"], device, network)
 
-            # ВИПРАВЛЕНО: Передаємо всі потрібні 7 параметрів (включаючи score та reason)
+            # Передаємо всі 7 параметрів у логер подій безпеки
             log_event(username, user["role"], device, network, decision, score, reason)
 
             if decision in ["ALLOW", "LIMITED"]:
@@ -56,7 +58,7 @@ def login():
 
 @app.route("/dashboard")
 def dashboard():
-    # Захист від прямого переходу без авторизації
+    # Захист від прямого переходу без сесії
     if "user" not in session:
         return redirect(url_for("login"))
 
@@ -78,7 +80,7 @@ def logout():
 
 if __name__ == "__main__":
     print("[INIT] Створення конфігураційних файлів логів...")
-    print("[INIT] Ініціалізація бази даних SQLite...")
+    print("[INIT] Иніціалізація бази даних SQLite...")
     init_db()
 
     print("[SYSTEM] Запуск Zero Trust веб-сервера...")
