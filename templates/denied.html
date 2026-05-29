@@ -16,27 +16,28 @@
             <button id="theme-toggle" class="theme-btn" type="button">🌓</button>
         </div>
 
-        {% if score <= 10 or reason and "Admin restriction" in reason or "blocked" in reason %} <div
-            class="ad-hero deny">
-            <h1 class="ad-verdict deny">ACCESS DENIED</h1>
-            <div class="ad-score-bar">
-                <span>TRUST SCORE: <strong>{{ score }}/80</strong></span>
-                <span class="ad-status-badge badge-deny">CRITICAL RISK</span>
-            </div>
-    </div>
-    {% elif score < 70 %} <div class="ad-hero limited">
-        <h1 class="ad-verdict limited">LIMITED ACCESS</h1>
-        <div class="ad-score-bar">
-            <span>TRUST SCORE: <strong>{{ score }}/80</strong></span>
-            <span class="ad-status-badge badge-limited">MEDIUM RISK</span>
-        </div>
-        </div>
-        {% else %}
+        {% if decision == "ALLOW" %}
         <div class="ad-hero allow">
             <h1 class="ad-verdict allow">ACCESS GRANTED</h1>
             <div class="ad-score-bar">
                 <span>TRUST SCORE: <strong>{{ score }}/80</strong></span>
                 <span class="ad-status-badge badge-allow">TRUSTED</span>
+            </div>
+        </div>
+        {% elif decision == "LIMITED" %}
+        <div class="ad-hero limited">
+            <h1 class="ad-verdict limited">LIMITED ACCESS</h1>
+            <div class="ad-score-bar">
+                <span>TRUST SCORE: <strong>{{ score }}/80</strong></span>
+                <span class="ad-status-badge badge-limited">MEDIUM RISK</span>
+            </div>
+        </div>
+        {% else %}
+        <div class="ad-hero deny">
+            <h1 class="ad-verdict deny">ACCESS DENIED</h1>
+            <div class="ad-score-bar">
+                <span>TRUST SCORE: <strong>{{ score }}/80</strong></span>
+                <span class="ad-status-badge badge-deny">CRITICAL RISK</span>
             </div>
         </div>
         {% endif %}
@@ -48,11 +49,11 @@
             </div>
             <div class="ad-meta-item">
                 <div class="ad-meta-label">Стан пристрою</div>
-                <div class="ad-meta-val">Context Verified</div>
+                <div class="ad-meta-val">{{ request.form.get('device', 'Context Verified') | uppercase }}</div>
             </div>
             <div class="ad-meta-item">
                 <div class="ad-meta-label">Мережевий контекст</div>
-                <div class="ad-meta-val">Evaluated</div>
+                <div class="ad-meta-val">{{ request.form.get('network', 'Evaluated') | uppercase }}</div>
             </div>
         </div>
 
@@ -73,34 +74,37 @@
         </div>
 
         <div style="display: flex; gap: 12px; margin-top: 1.5rem;">
+            {% if decision in ["ALLOW", "LIMITED"] %}
+            <a href="{{ url_for('dashboard') }}" class="zt-btn"
+                style="text-decoration: none; text-align: center; flex: 1;">Перейти до панелі (Dashboard)</a>
+            {% endif %}
+
             <a href="{{ url_for('login') }}" class="zt-btn"
-                style="text-decoration: none; text-align: center; flex: 1;">Повернутися до входу</a>
-            <a href="{{ url_for('index') }}" class="zt-btn"
-                style="text-decoration: none; text-align: center; background: transparent; border: 1px solid var(--border-secondary); color: var(--text-main); flex: 1;">На
-                головну</a>
+                style="text-decoration: none; text-align: center; flex: 1; background: transparent; border: 1px solid var(--border-secondary); color: var(--text-main);">Повернутися
+                до входу</a>
         </div>
-        </div>
+    </div>
 
-        <script>
-            const toggleBtn = document.getElementById('theme-toggle');
-            const htmlEl = document.documentElement;
+    <script>
+        const toggleBtn = document.getElementById('theme-toggle');
+        const htmlEl = document.documentElement;
 
-            const savedTheme = localStorage.getItem('theme') || 'auto';
-            htmlEl.setAttribute('data-theme', savedTheme);
+        const savedTheme = localStorage.getItem('theme') || 'auto';
+        htmlEl.setAttribute('data-theme', savedTheme);
 
-            toggleBtn.addEventListener('click', () => {
-                const currentTheme = htmlEl.getAttribute('data-theme');
-                let newTheme = 'light';
-                if (currentTheme === 'light') newTheme = 'dark';
-                else if (currentTheme === 'dark') newTheme = 'light';
-                else {
-                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    newTheme = prefersDark ? 'light' : 'dark';
-                }
-                htmlEl.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-            });
-        </script>
+        toggleBtn.addEventListener('click', () => {
+            const currentTheme = htmlEl.getAttribute('data-theme');
+            let newTheme = 'light';
+            if (currentTheme === 'light') newTheme = 'dark';
+            else if (currentTheme === 'dark') newTheme = 'light';
+            else {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                newTheme = prefersDark ? 'light' : 'dark';
+            }
+            htmlEl.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
 </body>
 
 </html>
