@@ -1,159 +1,221 @@
-/* Базові налаштування сторінки */
+/* Налаштування шрифтів та колірних палітр для тем */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+    /* Світла тема (За замовчуванням) */
+    --bg-main: #faf8f5;
+    --bg-card: #ffffff;
+    --border-primary: #e2e8f0;
+    --border-secondary: #cbd5e0;
+    --text-main: #1a202c;
+    --text-muted: #718096;
+    --accent: #3182ce;
+    --accent-hover: #2b6cb0;
+    --dot-color: #48bb78;
+}
+
+/* Медіа-запит для автоматичної темної теми Mac */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-main: #0f141c;
+        --bg-card: #171e29;
+        --border-primary: #2d3748;
+        --border-secondary: #4a5568;
+        --text-main: #f7fafc;
+        --text-muted: #a0aec0;
+        --accent: #4299e1;
+        --accent-hover: #63b3ed;
+    }
+}
+
+/* Примусова світла тема за кнопкою */
+html[data-theme="light"] {
+    --bg-main: #faf8f5;
+    --bg-card: #ffffff;
+    --border-primary: #e2e8f0;
+    --border-secondary: #cbd5e0;
+    --text-main: #1a202c;
+    --text-muted: #718096;
+    --accent: #3182ce;
+    --accent-hover: #2b6cb0;
+}
+
+/* Примусова темна тема за кнопкою */
+html[data-theme="dark"] {
+    --bg-main: #0f141c;
+    --bg-card: #171e29;
+    --border-primary: #2d3748;
+    --border-secondary: #4a5568;
+    --text-main: #f7fafc;
+    --text-muted: #a0aec0;
+    --accent: #4299e1;
+    --accent-hover: #63b3ed;
+}
+
+/* Загальні стилі */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-    padding: 40px;
-    max-width: 800px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    padding: 40px 20px;
+    margin: 0;
+    display: block;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.zt-wrap {
+    max-width: 680px;
     margin: 0 auto;
-    line-height: 1.6;
 }
 
-h1,
-h2,
-h3 {
-    color: #2c3e50;
+/* Шапка прототипу */
+.zt-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
 }
 
-/* Навігація та кнопки */
-nav {
-    margin: 20px 0;
-    padding: 10px;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+.zt-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    background: var(--bg-main);
+    border: 1px solid var(--border-secondary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--text-muted);
+    text-transform: uppercase;
 }
 
-a {
-    color: #007BFF;
-    text-decoration: none;
+.zt-logo {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-main);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.zt-divider {
+    flex: 1;
+    height: 1px;
+    background: var(--border-primary);
+}
+
+.theme-btn {
+    background: none;
+    border: 1px solid var(--border-primary);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    background-color: var(--bg-card);
+    transition: transform 0.1s;
+}
+
+.theme-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Головна картка форми */
+.zt-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+/* Сітка для полів форми */
+.zt-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.zt-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.zt-field.full {
+    grid-column: span 2;
+}
+
+.zt-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
     font-weight: 500;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-top: 15px;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-    text-decoration: none;
-}
-
-/* Форма контекстної автентифікації */
-form {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 450px;
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #4a5568;
-}
-
-input[type="text"],
-input[type="password"],
-select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #cbd5e0;
-    border-radius: 5px;
-    box-sizing: border-box;
+/* Поля вводу та селекти */
+.zt-input,
+.zt-select {
+    font-family: inherit;
     font-size: 14px;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-secondary);
+    border-radius: 6px;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
 }
 
-button {
+.zt-input:focus,
+.zt-select:focus {
+    border-color: var(--accent);
+}
+
+/* Технічний статус-бар */
+.zt-context-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-main);
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border-primary);
+}
+
+.zt-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--dot-color);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Головна кнопка */
+.zt-btn {
     width: 100%;
     padding: 12px;
-    background-color: #2b6cb0;
-    color: white;
+    background: var(--accent);
+    color: #ffffff;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
+    transition: background 0.2s;
 }
 
-button:hover {
-    background-color: #2c5282;
+.zt-btn:hover {
+    background: var(--accent-hover);
 }
 
-/* Нові інформаційні блоки архітектури Zero Trust */
-
-/* Картка профілю користувача та балів безпеки */
-.profile-box {
-    background: #edf2f7;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 20px 0;
-    border-left: 5px solid #4a5568;
-}
-
-.profile-box strong {
-    font-size: 1.1em;
-}
-
-/* Попередження для Limited Access (Жовтий блок) */
-.warning-box {
-    background-color: #fffaf0;
-    border: 1px solid #feebc8;
-    border-left: 5px solid #dd6b20;
-    color: #c05621;
-    padding: 15px;
-    border-radius: 6px;
-    margin: 20px 0;
-}
-
-/* Блок повної відмови у доступі (Червоний блок) */
+/* Блоки помилок */
 .error-box {
-    background-color: #fff5f5;
-    border: 1px solid #fed7d7;
-    border-left: 5px solid #e53e3e;
-    color: #c53030;
-    padding: 15px;
-    border-radius: 6px;
-    margin: 20px 0;
-}
-
-/* Логи та таблиці моніторингу */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: white;
-}
-
-th,
-td {
-    border: 1px solid #e2e8f0;
-    padding: 12px;
-    text-align: left;
-}
-
-th {
-    background-color: #f7fafc;
-    color: #4a5568;
-}
-
-tr:nth-child(even) {
-    background-color: #f8fafc;
-}
-
-tr:hover {
-    background-color: #edf2f7;
+    background-color: rgba(229, 62, 62, 0.1);
+    border-left: 4px solid #e53e3e;
+    color: #e53e3e;
+    border-radius: 4px;
 }
