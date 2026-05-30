@@ -1,28 +1,148 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-theme="auto">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Zero Trust School Access Control</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZTAC — Zero Trust Access Control</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-    <h1>Система контролю доступу Zero Trust для шкіл</h1>
 
-    {% if session.get('user') %}
-    <h2>Вітаємо, {{ session['user'] }}!</h2>
-    <p>Ваша роль у системі: <strong>{{ session['role'] }}</strong></p>
-    <p>Рівень доступу: <strong>{{ session['access_level'] }}</strong></p>
-
-    <nav>
-        <a href="/dashboard">Панель керування</a> |
-        <a href="/logout">Вийти з акаунта</a>
+    <nav
+        style="position: sticky; top: 0; z-index: 100; background: var(--bg-card); border-bottom: 1px solid var(--border-primary); display: flex; align-items: center; padding: 0 20px; height: 56px; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span class="ad-logo" style="font-size: 14px; font-weight: 600; letter-spacing: 0.1em;">ZTAC</span>
+            <div style="display: flex; gap: 4px;">
+                <a href="{{ url_for('index') }}" class="zt-badge"
+                    style="text-decoration: none; border-color: var(--accent); color: var(--accent);">Головна</a>
+                <a href="{{ url_for('login') }}" class="zt-badge" style="text-decoration: none;">Авторизація</a>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <button id="theme-toggle" class="theme-btn" type="button" style="padding: 4px 8px;">🌓</button>
+            <span class="zt-badge"
+                style="border-color: var(--color-allow); color: var(--color-allow); text-transform: none; font-size: 11px;">●
+                Система онлайн</span>
+        </div>
     </nav>
-    {% else %}
-    <p>Для отримання доступу до ресурсів закладу необхідно пройти автентифікацію з урахуванням контексту безпеки.</p>
-    <a href="/login" class="btn">Перейти до входу</a>
-    {% endif %}
+
+    <div class="zt-wrap" style="max-width: 900px; padding-top: 2rem;">
+
+        <section class="hero"
+            style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: start; margin-bottom: 3rem;">
+            <div class="hero-left">
+                <div class="zt-badge" style="margin-bottom: 1rem; font-size: 11px;">Educational IT security prototype
+                </div>
+                <h1 style="font-size: 38px; font-weight: 300; line-height: 1.15; margin-bottom: 1.25rem;">
+                    Архітектура <br /><strong style="font-weight: 600; color: var(--accent);">Zero
+                        Trust</strong><br />Контролю Доступу
+                </h1>
+                <p style="font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem;">
+                    Полегшений прототип системи контекстно-залежного керування доступом (Context-Aware Access Control)
+                    побудований для шкільної IT-інфраструктури ліцею. Кожен запит динамічно перевіряється за роллю,
+                    автентичністю пристрою та контекстом мережі — без жодної неявної довіри.
+                </p>
+                <div style="display: flex; gap: 12px;">
+                    <a href="{{ url_for('login') }}" class="zt-btn"
+                        style="text-decoration: none; width: auto; padding: 12px 24px;">Запустити прототип →</a>
+                </div>
+            </div>
+
+            <div class="zt-card"
+                style="padding: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; background: var(--bg-main);">
+                <div
+                    style="display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid var(--border-primary); padding-bottom: 8px; color: var(--text-muted);">
+                    <span>● policy-engine</span><span>·</span><span>v2.5</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; line-height: 1.6;">
+                    <div style="color: var(--text-muted);"># Evaluating real-time access request...</div>
+                    <div><span style="color: var(--text-muted);">$</span> ztac.evaluate_context()</div>
+                    <div style="padding-left: 12px; color: var(--text-muted);">
+                        identity: "teacher1",<br />
+                        device: "managed",<br />
+                        network: "school"
+                    </div>
+                    <div style="color: var(--color-allow); font-weight: 600;">→ VERDICT: ALLOW (Full Access)</div>
+                    <div style="border-top: 1px dashed var(--border-primary); margin: 6px 0;"></div>
+                    <div><span style="color: var(--text-muted);">$</span> ztac.evaluate_context()</div>
+                    <div style="padding-left: 12px; color: var(--text-muted);">
+                        identity: "admin1",<br />
+                        device: "unmanaged",<br />
+                        network: "public"
+                    </div>
+                    <div style="color: var(--color-deny); font-weight: 600;">→ VERDICT: DENY (Critical Risk)</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="zt-divider" style="width: 100%; margin-bottom: 3rem;"></div>
+
+        <section class="principles" style="margin-bottom: 3rem;">
+            <div class="ad-logo" style="margin-bottom: 1.5rem;">Ключові принципи системи</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+
+                <div class="zt-card" style="padding: 20px;">
+                    <div
+                        style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">
+                        01 · РУШІЙ</div>
+                    <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Ніколи не довіряй</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">Жоден користувач чи девайс
+                        не має постійної довіри. Кожен запит проходить перевірку з нуля.</p>
+                </div>
+
+                <div class="zt-card" style="padding: 20px;">
+                    <div
+                        style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">
+                        02 · КОНТЕКСТ</div>
+                    <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Завжди перевіряй</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">Роль, рівень безпеки
+                        пристрою та якість мережі аналізуються під час кожної спроби входу.</p>
+                </div>
+
+                <div class="zt-card" style="padding: 20px;">
+                    <div
+                        style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">
+                        03 · SIEM LOG</div>
+                    <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Повний аудит подій</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">Всі транзакції та ухвалені
+                        рішення логуються в JSON-форматі для оперативного моніторингу аномалій.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="zt-divider" style="width: 100%; margin-bottom: 2rem;"></div>
+
+        <footer
+            style="display: flex; justify-content: space-between; align-items: center; padding: 20px 0; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted);">
+            <span>ZTAC · Магістерський дипломний прототип</span>
+            <span>never trust · always verify</span>
+        </footer>
+
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('theme-toggle');
+        const htmlEl = document.documentElement;
+
+        const savedTheme = localStorage.getItem('theme') || 'auto';
+        htmlEl.setAttribute('data-theme', savedTheme);
+
+        toggleBtn.addEventListener('click', () => {
+            const currentTheme = htmlEl.getAttribute('data-theme');
+            let newTheme = 'light';
+            if (currentTheme === 'light') newTheme = 'dark';
+            else if (currentTheme === 'dark') newTheme = 'light';
+            else {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                newTheme = prefersDark ? 'light' : 'dark';
+            }
+            htmlEl.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
 </body>
 
 </html>
